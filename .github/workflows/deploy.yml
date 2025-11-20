@@ -1,40 +1,37 @@
-name: Build and Deploy to GitHub Pages
+name: Build GDevelop
 
 on:
   push:
     branches: [ master ]
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
+  build:
+    runs-on: ubuntu-20.04  # ← Versión antigua de Ubuntu
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v3  # v3, no v4
+      
+      - uses: actions/setup-node@v3
         with:
-          node-version: '20'
-
-      # Paso 1: Instalar dependencias en la raíz (para scripts globales si los hubiera)
-      - name: Install root dependencies
-        run: yarn install
-
-      # Paso 2: ¡Crucial! Instalar dependencias en newIDE/app
-      - name: Install web app dependencies
+          node-version: '16.x'  # ← Node 16 LTS
+      
+      # NO uses npm ci si no hay package-lock.json
+      - name: Install root deps
+        run: npm install --legacy-peer-deps
+      
+      - name: Install app deps
         working-directory: ./newIDE/app
-        run: yarn install
-
-      # Paso 3: Compilar la app web
-      - name: Build web app
+        run: npm install --legacy-peer-deps
+      
+      - name: Build
         working-directory: ./newIDE/app
-        run: yarn build
-
-      # Paso 4: Desplegar
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        run: npm run build
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+          CI: false
+      
+      - uses: peaceiris/actions-gh-pages@v3
         with:
-          folder: newIDE/app/build
-          branch: gh-pages
-          clean: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./newIDE/app/build
