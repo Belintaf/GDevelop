@@ -17,13 +17,21 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      # Paso 1: Instalar dependencias en la raíz (para scripts globales si los hubiera)
+      - name: Install root dependencies
         run: yarn install
 
+      # Paso 2: ¡Crucial! Instalar dependencias en newIDE/app
+      - name: Install web app dependencies
+        working-directory: ./newIDE/app
+        run: yarn install
+
+      # Paso 3: Compilar la app web
       - name: Build web app
         working-directory: ./newIDE/app
         run: yarn build
 
+      # Paso 4: Desplegar
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
