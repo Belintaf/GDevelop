@@ -7,30 +7,33 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04  # ← Versión antigua de Ubuntu
-    
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3  # v3, no v4
-      
+      # Clonar repo
+      - uses: actions/checkout@v3
+
+      # Configurar Node.js
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'  # ← Node 16 LTS
-      
-      # NO uses npm ci si no hay package-lock.json
-      - name: Install root deps
-        run: npm install --legacy-peer-deps
-      
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: 'newIDE/app/package-lock.json'
+
+      # Instalar dependencias de la app
       - name: Install app deps
         working-directory: ./newIDE/app
         run: npm install --legacy-peer-deps
-      
+
+      # Build
       - name: Build
         working-directory: ./newIDE/app
         run: npm run build
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           CI: false
-      
+
+      # Publicar en GitHub Pages
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
