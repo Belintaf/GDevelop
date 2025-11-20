@@ -2,8 +2,7 @@ name: Build and Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build-and-deploy:
@@ -16,18 +15,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'  # Versión recomendada para GDevelop
+          node-version: '20'
+          cache: 'yarn'
 
-      - name: Install dependencies
-        run: |
-          yarn install --frozen-lockfile
+      - name: Install root dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Build web app
-        working-directory: ./newIDE/app
         run: yarn build
+        working-directory: ./newIDE/app
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: newIDE/app/build  # Directorio con los archivos compilados
-          branch: gh-pages  # Rama para el despliegue
+          folder: newIDE/app/build
+          branch: gh-pages
+          clean: true  
