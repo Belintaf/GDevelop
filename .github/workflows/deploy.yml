@@ -16,18 +16,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
 
-      - name: Install root dependencies
+      - name: Install dependencies
         run: yarn install
 
       - name: Build web app
-        run: yarn build
         working-directory: ./newIDE/app
+        run: yarn build
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: newIDE/app/build
           branch: gh-pages
-          clean: true  
+          clean: true
