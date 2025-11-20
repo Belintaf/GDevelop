@@ -4,7 +4,7 @@ GDevelop is a **full-featured, no-code, open-source** game development software.
 
 ![The GDevelop editor when editing a game level](https://raw.githubusercontent.com/4ian/GDevelop/master/newIDE/GDevelop%20screenshot.png "The GDevelop editor when editing a game level")
 
-## Getting started
+## Getting started :)
 
 | ❔ I want to...                                   | 🚀 What to do                                                                                                                                                     |
 | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
